@@ -1,4 +1,5 @@
 # Login Page and Registration App UI
+# release
 
 Welcome to the Login Page and Registration App UI project! This project showcases a user interface (UI) design concept for a login page and registration flow. Below, you will find information about the project, screenshots of the UI, and instructions on how to get started.
 
