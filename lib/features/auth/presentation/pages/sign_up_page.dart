@@ -49,10 +49,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: const [
                     SizedBox(width: 10),
                     Text(
-                      "Enter your details",
+                      "Register",
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 40,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -65,7 +65,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       controller: nameController,
                       validator: AuthValidator.isNameValid,
                       decoration: const InputDecoration(
-                        hintText: "user name",
+                        hintText: "Email addresss",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue, width: 4.0),
+                        )
                       ),
                     ),
 
@@ -75,7 +78,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       controller: emailController,
                       validator: AuthValidator.isEmailValid,
                       decoration: const InputDecoration(
-                        hintText: "email addresss",
+                        hintText: "User name",
+                         border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue, width: 4.0),
+    ),
                       ),
                     ),
 
@@ -86,7 +92,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       obscureText: passwordSee,
                       validator: AuthValidator.isPasswordValid,
                       decoration: InputDecoration(
-                        hintText: "password",
+                        
+                        hintText: "Create password",
+                         border: OutlineInputBorder(),
                         suffixIcon: GestureDetector(
                           onTap: () {
                             passwordSee = !passwordSee;
@@ -96,10 +104,14 @@ class _SignUpPageState extends State<SignUpPage> {
                             passwordSee
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
+                                
                           ),
+                          
                         ),
                       ),
                     ),
+
+
 
                     // Retry Password Input -------------------------------------
                     const SizedBox(height: 40),
@@ -108,13 +120,28 @@ class _SignUpPageState extends State<SignUpPage> {
                       obscureText: passwordSee,
                       validator: AuthValidator.isPasswordValid,
                       decoration: const InputDecoration(
-                        hintText: "password",
+                        hintText: "Confirm password",
+                         border: OutlineInputBorder(),
+                         suffixIcon: GestureDetector(
+                          onTap: () {
+                            passwordSee = !passwordSee;
+                            setState(() {});
+                          },
+                          child: Icon(
+                            passwordSee
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                                
+                          ),
+                          
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 120),
+                    
+                    const SizedBox(height: 20),
                     // Sign Up for Button ----------------------------------
                     MyButtonTwo(
-                      text: "Continue",
+                      text: "Next",
                       onPressed: signUpButton,
                     ),
                   ],
