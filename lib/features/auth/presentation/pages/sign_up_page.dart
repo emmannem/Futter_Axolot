@@ -111,7 +111,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
 
-
+                    
 
                     // Retry Password Input -------------------------------------
                     const SizedBox(height: 40),
@@ -122,23 +122,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       decoration: const InputDecoration(
                         hintText: "Confirm password",
                          border: OutlineInputBorder(),
-                         suffixIcon: GestureDetector(
-                          onTap: () {
-                            passwordSee = !passwordSee;
-                            setState(() {});
-                          },
-                          child: Icon(
-                            passwordSee
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                                
-                          ),
-                          
-                        ),
+                        
                       ),
                     ),
-                    
                     const SizedBox(height: 20),
+
+
+
                     // Sign Up for Button ----------------------------------
                     MyButtonTwo(
                       text: "Next",
