@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ui_one/features/auth/presentation/pages/admin_page.dart';
+import 'package:ui_one/features/auth/presentation/pages/landing_page.dart';
 import 'package:ui_one/features/auth/presentation/pages/main_home.dart';
 import 'package:ui_one/features/auth/presentation/pages/intro_page.dart';
 import 'package:ui_one/features/auth/presentation/pages/search_page.dart';
@@ -19,8 +20,10 @@ class _AppWidgetState extends State<AppWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: AppWidget.isLogin ? const AdminPage() : const IntroPage(),
+      //home: AppWidget.isLogin ? const AdminPage() : const IntroPage(),
+      home: LandingPage(),
       routes: {
+        LandingPage.id: (context) => LandingPage(),
         IntroPage.id: (context) => const IntroPage(),
         SignUpPage.id: (context) => const SignUpPage(),
         SignInPage.id: (context) => const SignInPage(),
