@@ -67,7 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: AuthValidator.isEmailValid,
                       decoration: const InputDecoration(
                           hintText: "Email addresss",
-                          border: OutlineInputBorder()),
+                          ),
                     ),
 
                     // User name Input -------------------------------------
@@ -77,7 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: AuthValidator.isNameValid,
                       decoration: const InputDecoration(
                         hintText: "User name",
-                        border: OutlineInputBorder(),
+                       
                       ),
                     ),
 
@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: AuthValidator.isPasswordValid,
                       decoration: InputDecoration(
                         hintText: "Create password",
-                        border: OutlineInputBorder(),
+                    
                         suffixIcon: GestureDetector(
                           onTap: () {
                             passwordSee = !passwordSee;
@@ -112,7 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: AuthValidator.isPasswordValid,
                       decoration: InputDecoration(
                         hintText: "Confirm password",
-                        border: OutlineInputBorder(),
+                    
                         suffixIcon: GestureDetector(
                           onTap: () {
                             passwordSee2 = !passwordSee2;
@@ -144,18 +144,18 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   // when the button is pressed
-  void signUpButton() {
-    if (_signUpGlobalKey.currentState!.validate()) {
-      final message = authController.registration(
+  Future<void> signUpButton() async { // Añade async aquí
+  if (_signUpGlobalKey.currentState!.validate()) {
+    try {
+      final Map<String, String> message = await authController.registration( // Añade await aquí
         nameController.text.trim(),
         emailController.text.trim(),
         passwordController.text.trim(),
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(message["message"] as String),
-          margin:
-              EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .9),
+          content: Text(message["message"]!),
+          margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .9),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 5),
           shape: const StadiumBorder(),
@@ -163,8 +163,13 @@ class _SignUpPageState extends State<SignUpPage> {
           showCloseIcon: true,
         ),
       );
+    } catch (e) {
+      print("Error: ${e.toString()}");
+      // Maneja el error aquí si es necesario
     }
   }
+}
+
 
   // textController exits when finished
   @override
