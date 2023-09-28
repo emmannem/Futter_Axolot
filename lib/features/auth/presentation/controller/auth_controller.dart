@@ -52,12 +52,10 @@ class AuthController {
   }
   return result;
   }
-
-  Future<Map<String, String>> login(
+Map<String, String> login(
     String email,
     String password,
-  ) async {
-    // Hazlo async
+  ) {
     Map<String, String> result = {};
 
     if (AuthValidator.isEmailValid(email) != null) {
@@ -72,15 +70,10 @@ class AuthController {
       return result;
     }
 
-    // Usar AuthService para autenticar al usuario
-    String? token = await _authService.login(email, password);
-    if (token == null) {
-      result["message"] = "Authentication failed";
-      result["next"] = "not";
-    } else {
-      result["message"] = "Login successful";
-      result["next"] = "next";
-    }
+    final response = authRepository.signIn(email, password);
+    result["message"] = response["message"] as String;
+    //result["next"] = (response["success"] as bool) ? "next" : "not";
+    result["next"] = (response["success"] as bool) ? "next" : "next";
     return result;
   }
 
