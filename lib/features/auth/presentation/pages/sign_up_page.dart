@@ -19,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordRetryController = TextEditingController();
   bool passwordSee = true;
+  bool passwordSee2 = true;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +27,13 @@ class _SignUpPageState extends State<SignUpPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
           child: Form(
             key: _signUpGlobalKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 10),
 
                 // Back Icon Button
                 GestureDetector(
@@ -41,12 +42,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                   child: const Icon(
                     Icons.chevron_left,
-                    size: 40,
+                    size: 30,
                   ),
                 ),
                 const SizedBox(height: 30),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     SizedBox(width: 10),
                     Text(
                       "Register",
@@ -57,44 +58,38 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 55),
+                const SizedBox(height: 30),
                 Column(
                   children: [
-                    // Name Input -------------------------------------
-                    TextFormField(
-                      controller: nameController,
-                      validator: AuthValidator.isNameValid,
-                      decoration: const InputDecoration(
-                        hintText: "Email addresss",
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue, width: 4.0),
-                        )
-                      ),
-                    ),
-
                     // Email Input -------------------------------------
-                    const SizedBox(height: 40),
                     TextFormField(
                       controller: emailController,
                       validator: AuthValidator.isEmailValid,
                       decoration: const InputDecoration(
+                          hintText: "Email addresss",
+                          border: OutlineInputBorder()),
+                    ),
+
+                    // User name Input -------------------------------------
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      controller: nameController,
+                      validator: AuthValidator.isNameValid,
+                      decoration: const InputDecoration(
                         hintText: "User name",
-                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue, width: 4.0),
-    ),
+                        border: OutlineInputBorder(),
                       ),
                     ),
 
                     // Password Input -------------------------------------
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
                     TextFormField(
                       controller: passwordController,
                       obscureText: passwordSee,
                       validator: AuthValidator.isPasswordValid,
                       decoration: InputDecoration(
-                        
                         hintText: "Create password",
-                         border: OutlineInputBorder(),
+                        border: OutlineInputBorder(),
                         suffixIcon: GestureDetector(
                           onTap: () {
                             passwordSee = !passwordSee;
@@ -104,31 +99,35 @@ class _SignUpPageState extends State<SignUpPage> {
                             passwordSee
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
-                                
                           ),
-                          
                         ),
                       ),
                     ),
 
-                    
-
                     // Retry Password Input -------------------------------------
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
                     TextFormField(
                       controller: passwordRetryController,
-                      obscureText: passwordSee,
+                      obscureText: passwordSee2,
                       validator: AuthValidator.isPasswordValid,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Confirm password",
-                         border: OutlineInputBorder(),
-                        
+                        border: OutlineInputBorder(),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            passwordSee2 = !passwordSee2;
+                            setState(() {});
+                          },
+                          child: Icon(
+                            passwordSee2
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 20),
 
-
-
+                    const SizedBox(height: 30),
                     // Sign Up for Button ----------------------------------
                     MyButtonTwo(
                       text: "Next",

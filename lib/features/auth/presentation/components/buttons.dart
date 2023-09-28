@@ -65,7 +65,7 @@ class MyButtonTwo extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        minimumSize: const Size(double.infinity, 30),
+        minimumSize: const Size(double.infinity, 50),
         backgroundColor: const Color.fromRGBO(103,57,255,1),
       ),
       child: Text(
