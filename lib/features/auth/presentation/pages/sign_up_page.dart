@@ -19,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordRetryController = TextEditingController();
   bool passwordSee = true;
+  bool passwordSee2 = true;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +27,13 @@ class _SignUpPageState extends State<SignUpPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
           child: Form(
             key: _signUpGlobalKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 10),
 
                 // Back Icon Button
                 GestureDetector(
@@ -41,52 +42,54 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                   child: const Icon(
                     Icons.chevron_left,
-                    size: 40,
+                    size: 30,
                   ),
                 ),
                 const SizedBox(height: 30),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     SizedBox(width: 10),
                     Text(
-                      "Enter your details",
+                      "Register",
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 40,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 55),
+                const SizedBox(height: 30),
                 Column(
                   children: [
-                    // Name Input -------------------------------------
-                    TextFormField(
-                      controller: nameController,
-                      validator: AuthValidator.isNameValid,
-                      decoration: const InputDecoration(
-                        hintText: "user name",
-                      ),
-                    ),
-
                     // Email Input -------------------------------------
-                    const SizedBox(height: 40),
                     TextFormField(
                       controller: emailController,
                       validator: AuthValidator.isEmailValid,
                       decoration: const InputDecoration(
-                        hintText: "email addresss",
+                          hintText: "Email addresss",
+                          ),
+                    ),
+
+                    // User name Input -------------------------------------
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      controller: nameController,
+                      validator: AuthValidator.isNameValid,
+                      decoration: const InputDecoration(
+                        hintText: "User name",
+                       
                       ),
                     ),
 
                     // Password Input -------------------------------------
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
                     TextFormField(
                       controller: passwordController,
                       obscureText: passwordSee,
                       validator: AuthValidator.isPasswordValid,
                       decoration: InputDecoration(
-                        hintText: "password",
+                        hintText: "Create password",
+                    
                         suffixIcon: GestureDetector(
                           onTap: () {
                             passwordSee = !passwordSee;
@@ -102,19 +105,32 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
 
                     // Retry Password Input -------------------------------------
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
                     TextFormField(
                       controller: passwordRetryController,
-                      obscureText: passwordSee,
+                      obscureText: passwordSee2,
                       validator: AuthValidator.isPasswordValid,
-                      decoration: const InputDecoration(
-                        hintText: "password",
+                      decoration: InputDecoration(
+                        hintText: "Confirm password",
+                    
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            passwordSee2 = !passwordSee2;
+                            setState(() {});
+                          },
+                          child: Icon(
+                            passwordSee2
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 120),
+
+                    const SizedBox(height: 30),
                     // Sign Up for Button ----------------------------------
                     MyButtonTwo(
-                      text: "Continue",
+                      text: "Next",
                       onPressed: signUpButton,
                     ),
                   ],
@@ -128,18 +144,18 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   // when the button is pressed
-  void signUpButton() {
-    if (_signUpGlobalKey.currentState!.validate()) {
-      final message = authController.registration(
+  Future<void> signUpButton() async { // Añade async aquí
+  if (_signUpGlobalKey.currentState!.validate()) {
+    try {
+      final Map<String, String> message = await authController.registration( // Añade await aquí
         nameController.text.trim(),
         emailController.text.trim(),
         passwordController.text.trim(),
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(message["message"] as String),
-          margin:
-              EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .9),
+          content: Text(message["message"]!),
+          margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .9),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 5),
           shape: const StadiumBorder(),
@@ -147,8 +163,13 @@ class _SignUpPageState extends State<SignUpPage> {
           showCloseIcon: true,
         ),
       );
+    } catch (e) {
+      print("Error: ${e.toString()}");
+      // Maneja el error aquí si es necesario
     }
   }
+}
+
 
   // textController exits when finished
   @override

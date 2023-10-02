@@ -16,7 +16,7 @@ class MyButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        minimumSize: const Size(double.infinity, 60),
+        minimumSize: const Size(double.infinity, 20),
         backgroundColor: const Color(0xFFEDEEF0),
       ),
       child: Row(
@@ -65,8 +65,8 @@ class MyButtonTwo extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        minimumSize: const Size(double.infinity, 60),
-        backgroundColor: const Color(0xFF265AE8),
+        minimumSize: const Size(double.infinity, 50),
+        backgroundColor: const Color.fromRGBO(103,57,255,1),
       ),
       child: Text(
         text,

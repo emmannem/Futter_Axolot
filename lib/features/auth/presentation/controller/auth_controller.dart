@@ -1,22 +1,26 @@
 import 'package:ui_one/features/auth/presentation/validator/auth_validator.dart';
-
+import '../../../../service/auth_service.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repasitory/auth_repository.dart';
 
 class AuthController {
+  final AuthService _authService = AuthService(); // Instancia de AuthService
+  final SignUpService _signService = SignUpService();
+
   AuthController._();
   static final AuthController _instance = AuthController._();
   factory AuthController(AuthRepository repository) {
     authRepository = repository;
     return _instance;
   }
+
   static late final AuthRepository authRepository;
 
-  Map<String, String> registration(
+  Future<Map<String, String>> registration(
     String name,
     String email,
     String password,
-  ) {
+  ) async  {
     Map<String, String> result = {};
 
     if (AuthValidator.isNameValid(name) != null) {
@@ -38,13 +42,17 @@ class AuthController {
     }
 
     final user = User("20", name, email, password);
-    final response = authRepository.signUp(user);
+    try {
+    final Map<String, Object> response = await _signService.createUser(user.name, user.password, user.email);
     result["message"] = response["message"] as String;
     result["next"] = (response["success"] as bool) ? "next" : "not";
-    return result;
+  } catch (e) {
+    result["message"] = "Failed to create user: ${e.toString()}";
+    result["next"] = "not";
   }
-
-  Map<String, String> login(
+  return result;
+  }
+Map<String, String> login(
     String email,
     String password,
   ) {
