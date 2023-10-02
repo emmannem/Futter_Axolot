@@ -1,52 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+//Emmanuel
 class AuthService with ChangeNotifier {
-  bool _auntenticando = false;
+  bool _autenticando = false;
+  String? _token;
 
-  bool get autenticando => _auntenticando;
+  bool get autenticando => _autenticando;
+  String? get token => _token;
+
   set autenticando(bool valor) {
-    _auntenticando = valor;
+    _autenticando = valor;
     notifyListeners();
   }
 
   Future<String?> login(String username, String password) async {
-    final HttpLink httpLink = HttpLink(
-      "http://localhost:8000/graphql/",
-    );
+    try {
+      autenticando = true;
 
-    final GraphQLClient client = GraphQLClient(
-      cache: GraphQLCache(),
-      link: httpLink,
-    );
+      final HttpLink httpLink = HttpLink(
+        "http://localhost:8000/graphql/",
+      );
 
-    final MutationOptions options = MutationOptions(
-      document: gql('''
-    mutation Loginuser(\$username: String!, \$password: String!) {
-      tokenAuth(username: \$username, password: \$password) {
-        token
+      final GraphQLClient client = GraphQLClient(
+        cache: GraphQLCache(),
+        link: httpLink,
+      );
+
+      final MutationOptions options = MutationOptions(
+        document: gql('''
+          mutation TokenAuth(\$username: String!, \$password: String!) {
+            tokenAuth(username: \$username, password: \$password) {
+              token
+            }
+          }
+        '''),
+        variables: <String, dynamic>{
+          'username': username,
+          'password': password,
+        },
+      );
+
+      final QueryResult result = await client.mutate(options);
+
+      if (result.hasException) {
+        // Manejar errores aquí
+        print(result.exception.toString());
+        return null;
       }
-    }
-  '''),
-      variables: <String, dynamic>{
-        'username': username,
-        'password': password,
-      },
-    );
 
-    final QueryResult result = await client.mutate(options);
-
-    if (result.hasException) {
+      _token = result.data?['tokenAuth']['token'];
+      autenticando = false;
+      return _token;
+    } catch (error) {
+      print(error.toString());
+      autenticando = false;
       return null;
     }
-
-    final String? token = result.data?['tokenAuth']['token'];
-
-    return token;
   }
 }
 
-
+//Diana
 class SignUpService with ChangeNotifier {
   Future<List<Map<String, dynamic>>> getUsers() async {
     final HttpLink httpLink = HttpLink(
@@ -81,19 +95,19 @@ class SignUpService with ChangeNotifier {
     return users;
   }
 
-Future<Map<String, Object>> createUser(
-    String name, String password, String email) async {
-  final HttpLink httpLink = HttpLink(
-    "http://localhost:8000/graphql/",
-  );
+  Future<Map<String, Object>> createUser(
+      String name, String password, String email) async {
+    final HttpLink httpLink = HttpLink(
+      "http://localhost:8000/graphql/",
+    );
 
-  final GraphQLClient client = GraphQLClient(
-    cache: GraphQLCache(),
-    link: httpLink,
-  );
+    final GraphQLClient client = GraphQLClient(
+      cache: GraphQLCache(),
+      link: httpLink,
+    );
 
-  final MutationOptions options = MutationOptions(
-    document: gql('''
+    final MutationOptions options = MutationOptions(
+      document: gql('''
       mutation CreateUser(\$username: String!, \$password: String!, \$email: String!) {
         createUser(username: \$username, password: \$password, email: \$email) {
           user {
@@ -103,27 +117,26 @@ Future<Map<String, Object>> createUser(
         }
       }
     '''),
-    variables: <String, dynamic>{
-      'username': name,
-      'password': password,
-      'email': email,
-    },
-  );
+      variables: <String, dynamic>{
+        'username': name,
+        'password': password,
+        'email': email,
+      },
+    );
 
-  final QueryResult result = await client.mutate(options);
+    final QueryResult result = await client.mutate(options);
 
-  if (result.hasException) {
-    return {"success": false, "message": 'Failed to create user'};
+    if (result.hasException) {
+      return {"success": false, "message": 'Failed to create user'};
+    }
+
+    bool userCreated = result.data?['createUser']['user'] != null;
+    if (userCreated) {
+      return {"success": true, "message": 'User created successfully'};
+    } else {
+      return {"success": false, "message": 'Failed to create user'};
+    }
   }
-
-  bool userCreated = result.data?['createUser']['user'] != null;
-  if (userCreated) {
-    return {"success": true, "message": 'User created successfully'};
-  } else {
-    return {"success": false, "message": 'Failed to create user'};
-  }
-}
-
 
   Future<Map<String, dynamic>?> getMe(String token) async {
     final AuthLink authLink = AuthLink(
@@ -161,4 +174,3 @@ Future<Map<String, Object>> createUser(
     return result.data?['me'];
   }
 }
-
