@@ -2,46 +2,59 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class AuthService with ChangeNotifier {
-  bool _auntenticando = false;
+  bool _autenticando = false;
+  String? _token;
 
-  bool get autenticando => _auntenticando;
+  bool get autenticando => _autenticando;
+  String? get token => _token;
+
   set autenticando(bool valor) {
-    _auntenticando = valor;
+    _autenticando = valor;
     notifyListeners();
   }
 
   Future<String?> login(String username, String password) async {
-    final HttpLink httpLink = HttpLink(
-      "http://localhost:8000/graphql/",
-    );
+    try {
+      autenticando = true;
 
-    final GraphQLClient client = GraphQLClient(
-      cache: GraphQLCache(),
-      link: httpLink,
-    );
+      final HttpLink httpLink = HttpLink(
+        "http://localhost:8000/graphql/",
+      );
 
-    final MutationOptions options = MutationOptions(
-      document: gql('''
-    mutation Loginuser(\$username: String!, \$password: String!) {
-      tokenAuth(username: \$username, password: \$password) {
-        token
+      final GraphQLClient client = GraphQLClient(
+        cache: GraphQLCache(),
+        link: httpLink,
+      );
+
+      final MutationOptions options = MutationOptions(
+        document: gql('''
+          mutation TokenAuth(\$username: String!, \$password: String!) {
+            tokenAuth(username: \$username, password: \$password) {
+              token
+            }
+          }
+        '''),
+        variables: <String, dynamic>{
+          'username': username,
+          'password': password,
+        },
+      );
+
+      final QueryResult result = await client.mutate(options);
+
+      if (result.hasException) {
+        // Manejar errores aquí
+        print(result.exception.toString());
+        return null;
       }
-    }
-  '''),
-      variables: <String, dynamic>{
-        'username': username,
-        'password': password,
-      },
-    );
 
-    final QueryResult result = await client.mutate(options);
-
-    if (result.hasException) {
+      _token = result.data?['tokenAuth']['token'];
+      autenticando = false;
+      return _token;
+    } catch (error) {
+      print(error.toString());
+      autenticando = false;
       return null;
     }
-
-    final String? token = result.data?['tokenAuth']['token'];
-
-    return token;
   }
 }
