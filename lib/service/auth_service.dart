@@ -12,7 +12,7 @@ class AuthService with ChangeNotifier {
 
   Future<String?> login(String username, String password) async {
     final HttpLink httpLink = HttpLink(
-      "Link to your GraphQL API",
+      "http://localhost:8000/graphql/",
     );
 
     final GraphQLClient client = GraphQLClient(
@@ -22,7 +22,11 @@ class AuthService with ChangeNotifier {
 
     final MutationOptions options = MutationOptions(
       document: gql('''
-    Your Mutation
+    mutation Loginuser(\$username: String!, \$password: String!) {
+      tokenAuth(username: \$username, password: \$password) {
+        token
+      }
+    }
   '''),
       variables: <String, dynamic>{
         'username': username,
