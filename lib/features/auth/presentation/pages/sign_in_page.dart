@@ -101,7 +101,7 @@ class _SignInPageState extends State<SignInPage> {
                   primary: Color(0xFF6739FF),
                   padding: EdgeInsets.symmetric(horizontal: 125, vertical: 22),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(0),
                   ),
                 ),
               ),
