@@ -13,7 +13,8 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final _signInGlobalKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController usernameController =
+      TextEditingController(); // Cambio en el controlador
   TextEditingController passwordController = TextEditingController();
   bool passwordSee = true;
 
@@ -55,10 +56,12 @@ class _SignInPageState extends State<SignInPage> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: emailController,
-                      validator: AuthValidator.isEmailValid,
+                      controller:
+                          usernameController, // Cambio en el controlador
+                      validator: AuthValidator
+                          .isNameValid, // Cambio en la función de validación
                       decoration: const InputDecoration(
-                        hintText: "Correo",
+                        hintText: "Nombre de usuario", // Cambio en la etiqueta
                       ),
                     ),
                     SizedBox(
@@ -137,13 +140,13 @@ class _SignInPageState extends State<SignInPage> {
 
   void signIn() {
     if (_signInGlobalKey.currentState!.validate()) {
-      // Agrega aquí tu lógica de inicio de sesión
+      // Agrega aquí tu lógica de inicio de sesión utilizando usernameController.text en lugar de emailController.text
     }
   }
 
   @override
   void dispose() {
-    emailController.dispose();
+    usernameController.dispose(); // Cambio en el nombre del controlador
     passwordController.dispose();
     super.dispose();
   }
