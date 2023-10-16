@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ui_one/features/auth/presentation/pages/admin_page.dart';
+import 'package:ui_one/features/auth/presentation/pages/home.dart';
 import 'package:ui_one/features/auth/presentation/pages/landing_page.dart';
 import 'package:ui_one/features/auth/presentation/pages/main_home.dart';
 import 'package:ui_one/features/auth/presentation/pages/intro_page.dart';
@@ -31,7 +32,8 @@ class _AppWidgetState extends State<AppWidget> {
         SearchScreen.id: (context) => const SearchScreen(),
         AdminPage.id: (context) => const AdminPage(),
         MyApp.id: (context) => const MyApp(),
-        ModelPage.id:(context) => const ModelPage(),
+        ModelPage.id: (context) => const ModelPage(),
+        HomeScreen.id: (context) => const HomeScreen()
       },
     );
   }
