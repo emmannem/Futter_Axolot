@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -23,6 +24,8 @@ class _ModelPageState extends State<ModelPage> {
       knownallergies,
       historyofcancerinfamily,
       numberofmajorsurgeries;
+  TextEditingController _urlController = TextEditingController();
+  TextEditingController _shaController = TextEditingController();
 
   Future<void> _consultarModelo() async {
     if (_formKey.currentState!.validate()) {
@@ -46,10 +49,11 @@ class _ModelPageState extends State<ModelPage> {
           headers: {"Content-Type": "application/json"});
 
       if (response.statusCode == 200) {
-          Map<String, dynamic> jsonResponse = json.decode(response.body);
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
         double? price = jsonResponse['premiumPrice'];
         setState(() {
-          _respuesta = ' ${price?.toStringAsFixed(2)}';  // Convertimos el número a String con dos decimales
+          _respuesta =
+              ' ${price?.toStringAsFixed(2)}'; // Convertimos el número a String con dos decimales
         });
       } else {
         setState(() {
@@ -57,6 +61,38 @@ class _ModelPageState extends State<ModelPage> {
               'Error al obtener respuesta, revisa que todos los campos sean validos';
         });
       }
+    }
+  }
+
+  Future<void> _llamadoAPI() async {
+    final url =
+        Uri.parse('https://api.github.com/repos/emmannem/medical_premium/dispatches');
+
+    final body = json.encode({
+      "event_type": "ml_ci_cd",
+      "client_payload": {
+        "dataseturl":
+            _urlController.text, // Obtén el valor desde el controlador
+        "sha": _shaController.text, // Obtén el valor desde el controlador
+      }
+    });
+
+    final headers = {
+      'Authorization': dotenv.env['tokenGit']!,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-type': 'application/json',
+    };
+
+    final response = await http.post(url, body: body, headers: headers);
+
+    if (response.statusCode == 204) {
+      setState(() {
+        _respuesta = 'Llamado a API exitoso';
+      });
+    } else {
+      setState(() {
+        _respuesta = 'Error al hacer el llamado a la API';
+      });
     }
   }
 
@@ -215,6 +251,41 @@ class _ModelPageState extends State<ModelPage> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller:
+                        _shaController, // Asociar el controlador al campo
+                    decoration: InputDecoration(labelText: 'Nombre'),
+                    onSaved: (value) {
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller:
+                        _urlController, // Asociar el controlador al campo
+                    decoration: InputDecoration(labelText: 'URL'),
+                    // No establecer el keyboardType, ya que es un campo de URL
+                    onSaved: (value) {
+                    },
+                  ),
+                ),
+                  ElevatedButton(
+                  onPressed: _llamadoAPI,
+                  child: const Text('Reentrenar Modelo'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF6739FF),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 125, vertical: 22),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(_respuesta),
               ],
             ),
           ),
